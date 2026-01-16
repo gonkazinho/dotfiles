@@ -6,6 +6,6 @@ return {
 			style = "warmer",
 			transparent = true,
 		})
-		vim.cmd.colorscheme("gruvbox")
+		-- vim.cmd.colorscheme("onedark")
 	end,
 }
