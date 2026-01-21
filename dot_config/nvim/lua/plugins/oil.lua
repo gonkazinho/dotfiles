@@ -3,8 +3,9 @@ return {
 	opts = {},
 	config = function()
 		require("oil").setup({
-			vim.keymap.set("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open [O]il" }),
+			view_options = { show_hidden = true },
 		})
+		vim.keymap.set("n", "<leader>o", "<cmd>Oil<cr>", { desc = "Open [O]il" })
 	end,
 	-- Optional dependencies
 	dependencies = { { "nvim-mini/mini.icons", opts = {} } },

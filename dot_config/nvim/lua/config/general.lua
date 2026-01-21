@@ -36,7 +36,7 @@ vim.opt.shiftwidth = 2
 
 vim.o.inccommand = "split"
 
-vim.o.cursorline = false
+vim.o.cursorline = true
 
 vim.o.scrolloff = 10
 
@@ -54,12 +54,25 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-vim.keymap.set("n", "E", "$", { desc = "Move to end of line." })
+vim.keymap.set({ "i", "c", "n", "v" }, "E", "$", { desc = "Move to end of line." })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	desc = "Highlight when yanking (copying) text",
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
 	callback = function()
 		vim.hl.on_yank()
+	end,
+})
+
+-- Change wezterm background color to match neovim
+local function update_background()
+	local hl = vim.api.nvim_get_hl(0, { name = "Normal" })
+	io.write(string.format("\x1b]1337;SetUserVar=nvim-background=%s\007", vim.base64.encode(tostring(hl.bg))))
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	pattern = "*",
+	callback = function()
+		update_background()
 	end,
 })
