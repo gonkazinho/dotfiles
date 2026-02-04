@@ -123,6 +123,8 @@ return {
 
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			local servers = {
+				pyright = {},
+				clangd = {},
 				lua_ls = {
 					-- cmd = { ... },
 					-- filetypes = { ... },
@@ -141,6 +143,7 @@ return {
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"ruff",
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -174,18 +177,25 @@ return {
 		opts = {
 			notify_on_error = false,
 			format_on_save = function(bufnr)
-				local disable_filetypes = { c = true, cpp = true }
-				if disable_filetypes[vim.bo[bufnr].filetype] then
-					return nil
-				else
-					return {
-						timeout_ms = 500,
-						lsp_format = "fallback",
-					}
-				end
+				-- local disable_filetypes = { cpp = true }
+				-- if disable_filetypes[vim.bo[bufnr].filetype] then
+				-- 	return nil
+				-- else
+				return {
+					timeout_ms = 500,
+					lsp_format = "fallback",
+				}
+				-- end
 			end,
 			formatters_by_ft = {
+				py = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+				c = { "clang-format" },
 				lua = { "stylua" },
+			},
+			formatters = {
+				clang_format = {
+					prepend_args = { "--style=file", "--fallback-style=LLVM" },
+				},
 			},
 		},
 	},
