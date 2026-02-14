@@ -3,7 +3,7 @@ return {
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			{ "mason-org/mason.nvim", opts = {} },
-			"mason-org/mason-lspconfig.nvim",
+			{ "mason-org/mason-lspconfig.nvim", opts = {} },
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
 			{
@@ -123,7 +123,7 @@ return {
 
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			local servers = {
-				pyright = {},
+				basedpyright = {},
 				clangd = {},
 				lua_ls = {
 					-- cmd = { ... },
@@ -148,7 +148,7 @@ return {
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 			require("mason-lspconfig").setup({
-				ensure_installed = {},
+				ensure_installed = { "lua_ls@3.16.4" },
 				automatic_installation = false,
 				handlers = {
 					function(server_name)
@@ -188,7 +188,7 @@ return {
 				-- end
 			end,
 			formatters_by_ft = {
-				py = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+				py = { "ruff_format" },
 				c = { "clang-format" },
 				lua = { "stylua" },
 			},

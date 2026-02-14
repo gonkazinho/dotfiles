@@ -4,6 +4,8 @@ return { -- Collection of various small independent plugins/modules
 		-- Better Around/Inside textobjects
 		require("mini.ai").setup({ n_lines = 500 })
 
+		require("mini.surround").setup()
+
 		local statusline = require("mini.statusline")
 		statusline.setup({ use_icons = vim.g.have_nerd_font })
 

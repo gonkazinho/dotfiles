@@ -6,6 +6,5 @@ return {
 			style = "deep",
 			transparent = true,
 		})
-		-- vim.cmd.colorscheme("onedark")
 	end,
 }
