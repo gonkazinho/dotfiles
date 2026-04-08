@@ -1,3 +1,3 @@
-require("config.general")
-require("config.lazy")
-require("config.load_colorscheme")
+require("general")
+require("plugins.colorschemes")
+require("plugins.plugins")

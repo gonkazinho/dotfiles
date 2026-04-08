@@ -1,6 +1,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.o.termguicolors = true
 vim.g.have_nerd_font = true
 
 vim.o.number = true
@@ -61,18 +62,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
 	callback = function()
 		vim.hl.on_yank()
-	end,
-})
-
--- Change wezterm background color to match neovim
-local function update_background()
-	local hl = vim.api.nvim_get_hl(0, { name = "Normal" })
-	io.write(string.format("\x1b]1337;SetUserVar=nvim-background=%s\007", vim.base64.encode(tostring(hl.bg))))
-end
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-	pattern = "*",
-	callback = function()
-		update_background()
 	end,
 })
