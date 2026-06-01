@@ -63,12 +63,32 @@ local lsp_servers = {
 	ty = {},
 	clangd = {},
 	lua_ls = {},
+	vtsls = {
+		settings = {
+			vtsls = {
+				tsserver = {
+					globalPlugins = {
+						{
+							name = "@vue/typescript-plugin",
+							location = vim.fn.stdpath("data")
+								.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+							languages = { "vue" },
+							configNamespace = "typescript",
+						},
+					},
+				},
+			},
+		},
+		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+	},
+	vue_ls = {},
 }
 
 local formatters = {
 	"stylua",
 	"ruff",
 	"clang-format",
+	"prettierd",
 }
 
 local ensure_installed = vim.tbl_keys(lsp_servers)
@@ -79,30 +99,25 @@ require("mason-lspconfig").setup({})
 require("mason-tool-installer").setup({
 	ensure_installed = ensure_installed,
 })
-
 for server, config in pairs(lsp_servers) do
-	vim.lsp.config(server, {
-		settings = config,
+	config["on_attach"] = function(_, bufnr)
+		local map = function(keys, func, desc, mode)
+			mode = mode or "n"
+			vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
+		end
 
-		-- only create the keymaps if the server attaches successfully
-		on_attach = function(_, bufnr)
-			local map = function(keys, func, desc, mode)
-				mode = mode or "n"
-				vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
-			end
-
-			-- LSP Keybinds
-			map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
-			map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
-			map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-			map("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-			map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-			map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-			map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
-			map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
-			map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
-		end,
-	})
+		-- LSP Keybinds
+		map("grn", vim.lsp.buf.rename, "[R]e[n]ame")
+		map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
+		map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+		map("gri", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+		map("grd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
+		map("grD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+		map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
+		map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+		map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
+	end
+	vim.lsp.config(server, config)
 end
 
 vim.diagnostic.config({
@@ -120,15 +135,6 @@ vim.diagnostic.config({
 	virtual_text = {
 		source = "if_many",
 		spacing = 2,
-		format = function(diagnostic)
-			local diagnostic_message = {
-				[vim.diagnostic.severity.ERROR] = diagnostic.message,
-				[vim.diagnostic.severity.WARN] = diagnostic.message,
-				[vim.diagnostic.severity.INFO] = diagnostic.message,
-				[vim.diagnostic.severity.HINT] = diagnostic.message,
-			}
-			return diagnostic_message[diagnostic.severity]
-		end,
 	},
 })
 
@@ -146,6 +152,7 @@ require("conform").setup({
 		python = { "ruff_format" },
 		c = { "clang_format" },
 		lua = { "stylua" },
+		javascript = { "prettierd", "prettier", stop_after_first = true },
 	},
 	formatters = {
 		clang_format = {
