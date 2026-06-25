@@ -1,14 +1,14 @@
 vim.pack.add({
 	"https://github.com/folke/tokyonight.nvim",
-	"https://github.com/AlexvZyl/nordic.nvim",
 	"https://github.com/rebelot/kanagawa.nvim",
 	"https://github.com/ellisonleao/gruvbox.nvim",
 	"https://github.com/shatur/neovim-ayu",
-	"https://github.com/WTFox/jellybeans.nvim",
+	"https://github.com/navarasu/onedark.nvim",
+	"https://github.com/tiagovla/tokyodark.nvim",
 })
 
 require("gruvbox").setup({ transparent_mode = true })
-require("jellybeans").setup({ transparent = true })
+require("onedark").setup({ style = "deep" })
 
 local path = vim.fn.stdpath("data") .. "/saved_colorscheme.txt"
 local function save_colorscheme(colorscheme)
@@ -26,7 +26,7 @@ end
 vim.keymap.set("n", "<leader>cs", function()
 	local colorscheme_name = vim.fn.input("Save colorscheme: ", vim.g.colors_name)
 	save_colorscheme(colorscheme_name)
-end, { desc = "Save loaded colorscheme" })
+end, { desc = "[S]ave loaded colorscheme" })
 
 local saved_colorscheme = get_saved_colorscheme()
 

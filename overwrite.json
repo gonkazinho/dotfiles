@@ -1,0 +1,5 @@
+{
+	"windows": {
+		"nvim": "$LOCALAPPDATA/nvim"
+	}
+}

@@ -1,3 +1,6 @@
+vim.keymap.set("n", "<leader>cp", function()
+	vim.pack.update(nil, { offline = true })
+end, { desc = "[C]lean [P]ackages" })
 -- Devicons
 vim.pack.add({ "https://github.com/nvim-tree/nvim-web-devicons" })
 -- Treesitter
@@ -82,6 +85,8 @@ local lsp_servers = {
 		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 	},
 	vue_ls = {},
+	tailwindcss = { filetypes = { "vue", "html", "react", "typescript", "javascript" } },
+	gopls = {},
 }
 
 local formatters = {
@@ -272,3 +277,6 @@ require("arrow").setup({
 })
 -- Rustacean
 vim.pack.add({ "https://github.com/mrcjkb/rustaceanvim" })
+-- Autotag
+vim.pack.add({ "https://github.com/windwp/nvim-ts-autotag" })
+require("nvim-ts-autotag").setup({})
