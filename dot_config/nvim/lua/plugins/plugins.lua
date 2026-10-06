@@ -6,8 +6,20 @@ vim.pack.add({ "https://github.com/nvim-tree/nvim-web-devicons" })
 -- Treesitter
 vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
 
-require("nvim-treesitter").setup({
-	auto_install = true,
+require("nvim-treesitter").install({
+	"lua",
+	"go",
+	"python",
+	"c",
+	"cpp",
+	"c_sharp",
+	"json",
+	"markdown",
+	"javascript",
+	"typescript",
+	"vue",
+	"html",
+	"css",
 })
 
 -- Update parsers when nvim-treesitter updates
@@ -33,7 +45,8 @@ require("lazydev").setup({
 	},
 })
 -- Blink (Autocomplete)
-vim.pack.add({ "https://github.com/saghen/blink.cmp" })
+vim.pack.add({ "https://github.com/saghen/blink.lib", "https://github.com/saghen/blink.cmp" })
+require("blink.cmp").build():pwait()
 require("blink.cmp").setup({
 	keymap = {
 		preset = "super-tab",
@@ -86,7 +99,9 @@ local lsp_servers = {
 	},
 	vue_ls = {},
 	tailwindcss = { filetypes = { "vue", "html", "react", "typescript", "javascript" } },
+	cssls = {},
 	gopls = {},
+	roslyn_ls = {},
 }
 
 local formatters = {
@@ -104,11 +119,16 @@ require("mason-lspconfig").setup({})
 require("mason-tool-installer").setup({
 	ensure_installed = ensure_installed,
 })
+
 for server, config in pairs(lsp_servers) do
-	config["on_attach"] = function(_, bufnr)
-		local map = function(keys, func, desc, mode)
+	vim.lsp.config(server, config)
+end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(event)
+		local function map(keys, func, desc, mode)
 			mode = mode or "n"
-			vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
+			vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 		end
 
 		-- LSP Keybinds
@@ -121,9 +141,8 @@ for server, config in pairs(lsp_servers) do
 		map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
 		map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
 		map("grt", require("telescope.builtin").lsp_type_definitions, "[G]oto [T]ype Definition")
-	end
-	vim.lsp.config(server, config)
-end
+	end,
+})
 
 vim.diagnostic.config({
 	severity_sort = true,
@@ -157,7 +176,7 @@ require("conform").setup({
 		python = { "ruff_format" },
 		c = { "clang_format" },
 		lua = { "stylua" },
-		javascript = { "prettierd", "prettier", stop_after_first = true },
+		javascript = { "prettierd", stop_after_first = true },
 	},
 	formatters = {
 		clang_format = {
@@ -254,6 +273,9 @@ end
 -- Autopairs
 vim.pack.add({ "https://github.com/windwp/nvim-autopairs" })
 require("nvim-autopairs").setup({})
+-- Autotag
+vim.pack.add({ "https://github.com/windwp/nvim-ts-autotag" })
+require("nvim-ts-autotag").setup({})
 -- Indent Blankline
 vim.pack.add({ "https://github.com/lukas-reineke/indent-blankline.nvim" })
 require("ibl").setup({})
@@ -277,6 +299,3 @@ require("arrow").setup({
 })
 -- Rustacean
 vim.pack.add({ "https://github.com/mrcjkb/rustaceanvim" })
--- Autotag
-vim.pack.add({ "https://github.com/windwp/nvim-ts-autotag" })
-require("nvim-ts-autotag").setup({})

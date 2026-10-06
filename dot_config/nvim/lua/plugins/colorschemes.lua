@@ -1,14 +1,8 @@
 vim.pack.add({
-	"https://github.com/folke/tokyonight.nvim",
-	"https://github.com/rebelot/kanagawa.nvim",
-	"https://github.com/ellisonleao/gruvbox.nvim",
-	"https://github.com/shatur/neovim-ayu",
-	"https://github.com/navarasu/onedark.nvim",
-	"https://github.com/tiagovla/tokyodark.nvim",
+	"https://github.com/sainnhe/gruvbox-material",
 })
-
-require("gruvbox").setup({ transparent_mode = true })
-require("onedark").setup({ style = "deep" })
+vim.g.gruvbox_material_foreground = "mix"
+vim.g.gruvbox_material_transparent_background = true
 
 local path = vim.fn.stdpath("data") .. "/saved_colorscheme.txt"
 local function save_colorscheme(colorscheme)
@@ -17,7 +11,7 @@ end
 
 local function get_saved_colorscheme()
 	if vim.fn.filereadable(path) == 0 then
-		save_colorscheme("tokyonight")
+		save_colorscheme("catppuccin")
 	end
 
 	return vim.fn.readfile(path)[1]
@@ -31,7 +25,7 @@ end, { desc = "[S]ave loaded colorscheme" })
 local saved_colorscheme = get_saved_colorscheme()
 
 if not pcall(vim.cmd.colorscheme, saved_colorscheme) then
-	vim.cmd.colorscheme("tokyonight")
-	save_colorscheme("tokyonight")
-	print(string.format("Saved colorscheme (%s) doesn't exist, swapping to tokyonight.", saved_colorscheme))
+	vim.cmd.colorscheme("catppuccin")
+	save_colorscheme("catppuccin")
+	print(string.format("Saved colorscheme (%s) doesn't exist, swapping to catppuccin.", saved_colorscheme))
 end
