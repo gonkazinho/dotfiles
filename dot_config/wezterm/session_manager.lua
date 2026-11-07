@@ -6,6 +6,9 @@ wezterm_session_manager.apply_to_config = function(_, project_path)
 end
 
 wezterm.on("wezterm_session_manager_show", function(window, pane)
+	if not search_path then
+		return
+	end
 	local sucess, stdout, _ = wezterm.run_child_process({ "fd", "-t", "d", ".*", search_path })
 	if not sucess then
 		return
