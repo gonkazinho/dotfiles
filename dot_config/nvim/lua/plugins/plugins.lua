@@ -21,7 +21,6 @@ require("nvim-treesitter").install({
 	"html",
 	"css",
 })
-
 -- Update parsers when nvim-treesitter updates
 vim.api.nvim_create_autocmd("PackChanged", {
 	callback = function(ev)
@@ -34,9 +33,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
 		end
 	end,
 })
--- Luasnip
-vim.pack.add({ "https://github.com/L3MON4D3/LuaSnip", "https://github.com/rafamadriz/friendly-snippets" })
-require("luasnip.loaders.from_vscode").lazy_load()
 -- Lazydev
 vim.pack.add({ "https://github.com/folke/lazydev.nvim" })
 require("lazydev").setup({
@@ -63,7 +59,6 @@ require("blink.cmp").setup({
 			lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
 		},
 	},
-	snippets = { preset = "luasnip" },
 	fuzzy = { implementation = "lua" },
 	signature = { enabled = true },
 })
@@ -98,7 +93,7 @@ local lsp_servers = {
 		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 	},
 	vue_ls = {},
-	tailwindcss = { filetypes = { "vue", "html", "react", "typescript", "javascript" } },
+	tailwindcss = {},
 	cssls = {},
 	gopls = {},
 	roslyn_ls = {},
